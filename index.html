@@ -6,21 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./index.js"></script>
     <script src="./dome.js"></script>
+    <script src="./kpop.js"></script>
+
     <title>Document</title>
   </head>
   <body>
     <h1>hi there</h1>
     <div>Wow!</div>
+    <p>paragraph</p>
   </body>
   <script>
-    var e = dome.get("div");
-    console.log(e);
-    var te = e.text();
-    console.log(te);
+    // var e = dome.get("div");
+    // console.log(e);
+    // var te = e.text();
+    // console.log(te);
 
-    var a = dome.create("div", { text: "new class", className: "now" });
+    // var a = dome.create("div", { text: "new class", className: "now" });
+    // console.log(a);
+
+    // e.append(a);
+
+    var a = kpop.get("p");
     console.log(a);
-
-    e.append(a);
+    a.text("hi there wow!!!!!!");
   </script>
 </html>
