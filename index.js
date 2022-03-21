@@ -1,1 +1,6 @@
-console.log("hi there");
+window.dome = (function()){
+    function Dome(els){
+
+        
+    }
+}
