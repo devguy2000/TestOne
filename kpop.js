@@ -21,6 +21,7 @@ window.dome = (function () {
         this.map(callback);
         return this; 
     };
+
     KPOP.prototype.map = function (callback) {
         var results = [];
         for (var i = 0; i < this.length; i++) {
@@ -28,6 +29,7 @@ window.dome = (function () {
         }
         return results; //.length > 1 ? results : results[0];
     };
+
     KPOP.prototype.mapOne = function (callback) {
         var m = this.map(callback);
         return m.length > 1 ? m : m[0];
@@ -173,6 +175,7 @@ window.dome = (function () {
             }
             return new KPOP(els);
         }, 
+        
         create: function (tagName, attrs) {
             var el = new KPOP([document.createElement(tagName)]);
             if (attrs) {
