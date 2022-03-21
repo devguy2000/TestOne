@@ -1,18 +1,21 @@
-
-
-// this is what the outside sees. kpop is what outside sees.
-window.kpop = (function(){
-    
-    // element holder function : like class
-    function KPOP(el){
-        for(var i = 0; i < el.length; i++ ) {
-            console.log(el[i]);
-            this[i] = el[i];
+if (typeof Array.prototype.indexOf !== 'function') {
+    Array.prototype.indexOf = function (item) {
+        for(var i = 0; i < this.length; i++) {
+            if (this[i] === item) {
+                return i;
+            }
         }
-        this.length = el.length;
-        console.log(el.length);
-    }
+        return -1;
+    }; 
+}
 
+window.dome = (function () {
+    function KPOP(els) {
+        for(var i = 0; i < els.length; i++ ) {
+            this[i] = els[i];
+        }
+        this.length = els.length;
+    }
     // ========= UTILS =========
     KPOP.prototype.forEach = function (callback) {
         this.map(callback);
@@ -43,6 +46,121 @@ window.kpop = (function(){
         }
     };
 
+    KPOP.prototype.html = function (html) {
+        if (typeof html !== "undefined") {
+            return this.forEach(function (el) {
+                el.innerHTML = html;
+            });
+        } else {
+            return this.mapOne(function (el) {
+                return el.innerHTML;
+            });
+        }
+    };
+
+    KPOP.prototype.addClass = function (classes) {
+        var className = "";
+        if (typeof classes !== 'string') {
+            for (var i = 0; i < classes.length; i++) {
+               className += " " + classes[i];
+            }
+        } else {
+            className = " " + classes;
+        }
+        return this.forEach(function (el) {
+            el.className += className;
+        });
+    };
+
+    KPOP.prototype.removeClass = function (clazz) {
+        return this.forEach(function (el) {
+            var cs = el.className.split(' '), i;
+
+            while ( (i = cs.indexOf(clazz)) > -1) { 
+                cs = cs.slice(0, i).concat(cs.slice(++i));
+            }
+            el.className = cs.join(' ');
+        });
+    };
+
+    KPOP.prototype.attr = function (attr, val) {
+        if (typeof val !== 'undefined') {
+            return this.forEach(function(el) {
+                el.setAttribute(attr, val);
+            });
+        } else {
+            return this.mapOne(function (el) {
+                return el.getAttribute(attr);
+            });
+        }
+    };
+
+    KPOP.prototype.append = function (els) {
+        return this.forEach(function (parEl, i) {
+            els.forEach(function (childEl) {
+                parEl.appendChild( (i > 0) ? childEl.cloneNode(true) : childEl);
+            });
+        });
+    };
+
+    KPOP.prototype.prepend = function (els) {
+        return this.forEach(function (parEl, i) {
+            for (var j = els.length -1; j > -1; j--) {
+                parEl.insertBefore((i > 0) ? els[j].cloneNode(true) : els[j], parEl.firstChild);
+            }
+        });
+    };
+
+    KPOP.prototype.remove = function () {
+        return this.forEach(function (el) {
+            return el.parentNode.removeChild(el);
+        });
+    };
+
+    KPOP.prototype.on = (function () {
+        if (document.addEventListener) {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el.addEventListener(evt, fn, false);
+                });
+            };
+        } else if (document.attachEvent)  {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el.attachEvent("on" + evt, fn);
+                });
+            };
+        } else {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el["on" + evt] = fn;
+                });
+            };
+        }
+    }());
+
+    KPOP.prototype.off = (function () {
+        if (document.removeEventListener) {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el.removeEventListener(evt, fn, false);
+                });
+            };
+        } else if (document.detachEvent)  {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el.detachEvent("on" + evt, fn);
+                });
+            };
+        } else {
+            return function (evt, fn) {
+                return this.forEach(function (el) {
+                    el["on" + evt] = null;
+                });
+            };
+        }
+    }());
+
     var kpop = {
         get: function (selector) {
             var els;
@@ -55,7 +173,6 @@ window.kpop = (function(){
             }
             return new KPOP(els);
         }, 
-
         create: function (tagName, attrs) {
             var el = new KPOP([document.createElement(tagName)]);
             if (attrs) {
@@ -76,7 +193,5 @@ window.kpop = (function(){
             return el;
         }
     };
-
     return kpop;
-
-})();
+}());
