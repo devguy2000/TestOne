@@ -8,5 +8,19 @@
     <script src="./dome.js"></script>
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <h1>hi there</h1>
+    <div>Wow!</div>
+  </body>
+  <script>
+    var e = dome.get("div");
+    console.log(e);
+    var te = e.text();
+    console.log(te);
+
+    var a = dome.create("div", { text: "new class", className: "now" });
+    console.log(a);
+
+    e.append(a);
+  </script>
 </html>
